@@ -13,17 +13,13 @@ import java.util.stream.Stream;
 import static com.codeborne.selenide.Selenide.*;
 
 public class TestsParametrized {
-    @CsvSource(value = {"Иванов Иван Иванович, Иванов Петр Сергеевич"})
+    @CsvSource(value = {"Иванов Иван Иванович", "Иванов Петр Сергеевич"})
     @ParameterizedTest(name = "Check results about {0} and {1}")
-    void testWithCSVParameters(String name0, String name1) {
+    void testWithCSVParameters(String name) {
         open("http://www.naks.ru/assp/reestrperson/");
-        $("[name='arrFilter_ff[NAME]']").setValue(name0);
+        $("[name='arrFilter_ff[NAME]']").setValue(name);
         $("[name='set_filter']").click();
-        $(".tabl").shouldHave(Condition.text(name0));
-        open("http://www.naks.ru/assp/reestrperson/");
-        $("[name='arrFilter_ff[NAME]']").setValue(name1);
-        $("[name='set_filter']").click();
-        $(".tabl").shouldHave(Condition.text(name1));
+        $(".tabl").shouldHave(Condition.text(name));
     }
 
     @EnumSource(value = Welders.class, names = {"WELDER3"}, mode = EnumSource.Mode.EXCLUDE)
@@ -50,7 +46,7 @@ public class TestsParametrized {
     }
 
     @MethodSource("dataProvider")
-    @ParameterizedTest
+    @ParameterizedTest(name = "Check cities after searching tickets")
     void testWithMethodSource(String cityFrom, String cityTo, String dateOut, String dateBack) {
         open("https://www.tutu.ru");
         $("[name=city_from]").setValue(cityFrom);
